@@ -17,8 +17,9 @@ import numpy as np
 from matplotlib import pyplot
 
 g = 9.8            # g acceleration
-mass = 100    #0.01        # mass of the particle
-y0 = 10000.          # initial position
+mass =  0.01        # mass of the particle
+y0 = 1000000.          # initial position
+y01 = 1000000.
 v0 = 0.            # initial velocity
 vt = 30.           # terminal velocity
 gforce = g*mass
@@ -71,15 +72,37 @@ def dist_calc(y0, p_d, p):
         v.append(p.v)
         t.append(t[-1]+dt)
     
-    diff = (abs(v_d[-1]-v[-1])/v[-1])*100
-    
+    diff = abs((v_d[-1]-v[-1])/v[-1])*100
+
     return (y,v,t,y_d,v_d,t_d,diff)
 
 y,v,t,y_d,v_d,t_d,differ = dist_calc(y0, p_d, p)
 
-while differ < 0.1 :
-    y0 = y0 + dy
-    y,v,t,y_d,v_d,t_d,differ = dist_calc(y0, p_d = particle(mass, y0, v0), p = particle(mass,y0,v0))
+#if differ < 0.01:
+ #   y01 = y0
+  #  y0 = 2*y0
+   # p_d.y = y0
+   # p.y = y0
+   # y,v,t,y_d,v_d,t_d,differ = dist_calc(y0, p_d, p)
+
+while True:    
+
+    if differ < 0.01:
+        y01 = y0
+        y0 = 2*y0
+        y0 = (y01+y0)/2
+        p_d.y = y0
+        p.y = y0
+        y,v,t,y_d,v_d,t_d,differ = dist_calc(y0, p_d, p)
+
+    if differ > 0.01:
+        y0 = (y01+y0)/2
+        p_d.y = y0
+        p.y = y0
+        y,v,t,y_d,v_d,t_d,differ = dist_calc(y0, p_d, p)
+        
+        if (differ - 0.01) < 0.0001:
+            break
 
 
 t_data = np.array(t) # we convert the list into a numpy array for plotting
@@ -105,3 +128,4 @@ pyplot.plot(td_data, yd_data, color="#FF0000", ls='-', lw=3)
 pyplot.ylabel('position(m)');
 pyplot.show()
 
+print(y0)
