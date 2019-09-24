@@ -35,13 +35,14 @@ for angle in range(1,9):
     vy = [math.sin(angle*0.1*math.pi/2.)*v0]
     t = [0.]
 
-    angled.append(int(angle*0.1*180/2.))
+    angled.append(int(angle*0.1*90))
     
     p = particle2(1., 0., 0., vx[0], vy[0])
     while p.y >= 0.:
-        fy = -g-k2*abs(p.vy)*p.vy
-        fx = -k2*p.vx**2
-        p.euler(0., fy, dt)
+        v = math.sqrt(p.vx**2 + p.vy**2)
+        fy = -g-k2*abs(v)*p.vy
+        fx = -k2*p.vx*abs(v)
+        p.euler(fx, fy, dt)
         x.append(p.x)
         y.append(p.y)
         vx.append(p.vx)
